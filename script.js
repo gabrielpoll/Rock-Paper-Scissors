@@ -1,76 +1,66 @@
- function getComputerChoice() {
-    let getRandomNumber = Math.random();
-    console.log(getRandomNumber)
-    if (0 < getRandomNumber && getRandomNumber < 0.333) {
-        return ("scissor");
-    } else if ( 0.333 < getRandomNumber && getRandomNumber < 0.666) {
-        return ("rock");
-    } else {
-        return ("paper");
-    }
- }
+const buttons = document.querySelectorAll(".buttons button");
+const resultPara = document.querySelector("#result");
+const playerSelectionID = document.querySelector("#player-selection");
+const computerSelectionID = document.querySelector("#computer-selection");
+const computerScoreID = document.querySelector("#computer-score");
+const playerScoreID = document.querySelector("#player-score");
+const roundsID = document.querySelector("#rounds");
 
-function getHumanChoice() {
-    const askPlayer = prompt("Rock, paper or scissor?").toLowerCase();
-    if (askPlayer === "rock") {
-        return "rock";
-    } else if (askPlayer === "paper") {
-        return "paper";
-    } else if (askPlayer === "scissor") {
-        return "scissor";}
-    }
+buttons.forEach(button => {
+    button.addEventListener("click", function(e) {
+        const playerSelection = e.target.textContent.toLowerCase();
+        const computerSelection = getComputerChoice();
 
-let humanScore = 0;
-let computerScore = 0;
+        playerSelectionID.textContent = playerSelection;
+        computerSelectionID.textContent = computerSelection;
 
-function playRound(humanChoice, computerChoice) {
-    if (humanChoice === 'scissor') {
-        if (computerChoice === 'scissor') {
-            alert("TIE, scissor and scissor");
-        } else if (computerChoice === 'paper') {
-            alert("Human WINS, scissor and paper");
-            humanScore++;
-        } else {
-            alert("Computer wins");
-            computerScore++;
-        }
-    }
-    else if (humanChoice === 'paper') {
-        if (computerChoice === 'paper') {
-            alert("TIE, paper and paper");
-        } else if (computerChoice === 'rock') {
-            alert("Human wins, paper beats rock");
-            humanScore++;
-        } else {
-            alert("Computer wins");
-            computerScore++;
-        }
-    }
-    else if (humanChoice === 'rock') {
-        if (computerChoice === 'rock') {
-            alert("Tie, rock and rock");
-        } else if (computerChoice === 'scissor') {
-            alert("Human wins, rock beat scissor");
-            humanScore++;
-        } else {
-            alert("Computer wins");
-        }
+        console.log(`jogador escolheu ${playerSelection} e o computador ${computerSelection}`)
+        
+        playRound(playerSelection, computerSelection);
+    }) 
+});
+
+function getComputerChoice() {
+    const num = Math.random();
+    switch (true) {
+        case (num < 0.33):
+            return "rock";
+        case (num < 0.66):
+            return "paper";
+        default:
+            return "scissor";
     }
 }
 
-function playGame() {
-    for (let i = 0; i < 5; i ++) {
-        let humanSelect = getHumanChoice();
-        let computerSelect = getComputerChoice();
-        playRound(humanSelect, computerSelect);
+const gameState = {
+    playerScore: 0,
+    computerScore: 0,
+    rounds: 0
+};
+
+function playRound(player, computer) {
+    const tabelaValores = {
+        "rock": "scissor",
+        "paper": "rock",
+        "scissor": "paper"
+    };
+
+    if (player === computer) {
+        resultPara.textContent = 'Empate';
     }
-    if (humanScore > computerScore) {
-        alert(`Human wins. Human: ${humanScore} | Computer: ${computerScore}`);
-    } else if (computerScore > humanScore) {
-        alert(`Computer wins. Human: ${humanScore} | Computer: ${computerScore}`);
-    } else if (computerScore === humanScore) {
-        alert(`No one win, a TIE. Human: ${humanScore} | Computer: ${computerScore}`);
+    else if (tabelaValores[player] === computer) {
+        resultPara.textContent = 'Player wins';
+        gameState.playerScore += 1;
+        playerScoreID.textContent = gameState.playerScore;
     }
+    else {
+        resultPara.textContent = 'Computer Wins';
+        gameState.computerScore += 1;
+        computerScoreID.textContent = gameState.computerScore;
+    }
+    gameState.rounds += 1
+    roundsID.textContent = gameState.rounds;
 }
 
-playGame();
+
+
